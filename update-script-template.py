@@ -55,7 +55,7 @@ for i in range(_size):
         nameToCheck = duplicate[i]['ColumnToCheckForDupes']
 
         '''Use these points to determine arbitrary points of integer insertion based on contractor status'''
-        if not duplicate[i]['contractor']:
+        if not duplicate[i]['condition']:
             insertPoint = duplicate[i]['ColumnToCheckForDupes'].find('@')
         else:
             insertPoint = duplicate[i]['ColumnToCheckForDupes'].find('.contractor')
