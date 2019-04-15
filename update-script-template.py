@@ -1,6 +1,6 @@
 import pyodbc
 
-'''Update info here for database. Autocommit will prevent updates from taking effect unintentionally.'''
+# Update info here for database. Autocommit will prevent updates from taking effect unintentionally.
 conn = pyodbc.connect('Driver={SQL Server};'
                       'Server=server_address;'
                       'Database=database_name;'
@@ -10,18 +10,18 @@ conn = pyodbc.connect('Driver={SQL Server};'
                       'autocommit=False')
 
 cursor = conn.cursor()
-'''Insert your initial query here'''
+# Insert your initial query here
 cursor.execute("insert SQL query here")
 columns = [column[0] for column in cursor.description]
 
 results = []
 
-'''Creating an array of dictionaries so we can access column names in our query'''
+# Creating an array of dictionaries so we can access column names in our query
 for row in cursor.fetchall():
     results.append(dict(zip(columns, row)))
 
 unique = []
-'''Python sets require that each element be unique, so we can use it to pick out duplicates'''
+# Python sets require that each element be unique, so we can use it to pick out duplicates
 seen = set()
 duplicate = []
 
@@ -41,7 +41,7 @@ for num, name in enumerate(results, start=0):
 
 _size = len(duplicate)
 
-'''Add an adjusted key to our duplicate dictionary entries to track whether they have been iterated over'''
+# Add an adjusted key to our duplicate dictionary entries to track whether they have been iterated over
 for i in range(_size):
     duplicate[i]['Adjusted'] = False
 
@@ -54,7 +54,7 @@ for i in range(_size):
         count = 1
         nameToCheck = duplicate[i]['ColumnToCheckForDupes']
 
-        '''Use these points to determine arbitrary points of integer insertion based on contractor status'''
+        # Use these points to determine arbitrary points of integer insertion based on contractor status
         if not duplicate[i]['condition']:
             insertPoint = duplicate[i]['ColumnToCheckForDupes'].find('@')
         else:
@@ -71,12 +71,12 @@ for i in range(_size):
                 duplicate[j]['ColumnToCheckForDupes'] = adjustedName
                 duplicate[j]['Adjusted'] = True
 
-'''Run updates to change our usernames. Comment out the cnxn.commit() ONLY when you want it to commit!'''
+# Run updates to change our usernames. Comment out the cnxn.commit() ONLY when you want it to commit!
 dupChangeCount = 0
 for i in range(len(duplicate)):
     cursor.execute("UPDATE usr SET ORIG_COL = ? where id = ?", duplicate[i]['ColumnToCheckForDupes'], duplicate[i]['id'])
     dupChangeCount = dupChangeCount + 1
-    '''cnxn.commit()'''
+    # cnxn.commit()
 
 print('Final Count changed: ' + str(dupChangeCount))
 
@@ -84,6 +84,6 @@ uneditedCount = 0
 for i in range(len(unique)):
     cursor.execute("UPDATE usr SET ORIG_COL = ? where id = ?", duplicate[i]['ColumnToCheckForDupes'], duplicate[i]['id'])
     uneditedCount = uneditedCount + 1
-    '''cnxn.commit()'''
+    # cnxn.commit()
 
 print('Unedited print count changed: ' + str(uneditedCount))
